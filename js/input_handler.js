@@ -28,7 +28,7 @@ function InputSetup()
 	document.body.addEventListener("DOMMouseScroll", MouseHandler, false);
 }
 
-function HandleInput( event, pTouch, touchIndex )
+function HandleInput( event )
 {
 	var x = 0;
 	var y = 0;
@@ -40,20 +40,15 @@ function HandleInput( event, pTouch, touchIndex )
 		//log("HandleInput( "+event.type+", "+pTouch+", "+touchIndex+" )");
 	}
 	
+	var touchIndex = 0;
+	
 	// Get click position.
-	if( pTouch )
+	if( m_touchEvents )
 	{
+		var touch = event.changedTouches[0];
 		
-		x = pTouch.pageX;
-		y = pTouch.pageY;
-		
-		var styleDetected = false;
-		
-		var gameArea = document.getElementById('gameArea');
-		
-		x -= gameArea.offsetLeft;
-		y -= gameArea.offsetTop;
-		
+		x = touch.pageX;
+		y = touch.pageY;
 	}
 	else
 	{
@@ -68,11 +63,11 @@ function HandleInput( event, pTouch, touchIndex )
 			y = event.y;
 		}
 		
-		var gameArea = document.getElementById('gameArea');
 		
-		x -= gameArea.offsetLeft;
-		y -= gameArea.offsetTop;
 	}
+	var gameArea = document.getElementById('gameArea');
+	x -= gameArea.offsetLeft;
+	y -= gameArea.offsetTop;
 	
 	if (event.type == "touchstart" || event.type == "mousedown" )
 	{
@@ -81,6 +76,7 @@ function HandleInput( event, pTouch, touchIndex )
 	else if (event.type == "touchmove" || event.type == "mousemove" )
 	{
 		PassInput( "mousemove", touchIndex, x, y );
+		
 	}
 	else if( ( event.type == "touchend" ) || ( event.type == "mouseup" ) )
 	{
