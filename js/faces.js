@@ -294,7 +294,7 @@ function ChangeBeard( value )
 	{
 		m_beardValue = BeardType.LAST - 1;
 	}
-
+	
 	//log( "m_beardValue " + m_beardValue );
 }
 
@@ -414,7 +414,7 @@ function ResizeGame() {
 	ResizeElements();
 	
 	InitButtons();
-
+	
 	log( "ResizeGame() finished! " + m_canvasWidth + ", " + m_canvasHeight );
 }
 
@@ -528,7 +528,8 @@ function Draw()
 					if( m_hairValue == HairType.LONG ||
 					   m_hairValue == HairType.LONG2 ||
 					   m_hairValue == HairType.LONG3 ||
-					   m_hairValue == HairType.NONE )
+					   m_hairValue == HairType.NONE ||
+					   m_hairValue == HairType.SHORT2 )
 					{
 						DrawHair( ctx, 10, 8.75, 1.7 );
 					}
@@ -536,8 +537,7 @@ function Draw()
 					ctx.translate( m_blockSize * -m_faceFeaturesCurrent, 0 );
 					
 					// hair
-					if( m_hairValue == HairType.SHORT ||
-						m_hairValue == HairType.SHORT2 )
+					if( m_hairValue == HairType.SHORT )
 					{
 						DrawHair( ctx, 10, 8.75, 1.7 );
 					}
@@ -692,7 +692,7 @@ function DrawHair( ctx, x, y, size )
 			ctx.save();
 			ctx.beginPath();
 			
-			ctx.arc( x * m_blockSize, y * m_blockSize, size * m_blockSize, 1*Math.PI, 1.8*Math.PI);
+			DrawArc( ctx, m_faceCurrent[0] + m_pHairX[i], m_faceCurrent[1] + m_pHairY[i], m_faceCurrent[2], m_faceCurrent[3], -0.25, 1, 0, true );
 			
 			ctx.stroke();
 			ctx.closePath();
