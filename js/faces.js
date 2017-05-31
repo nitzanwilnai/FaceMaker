@@ -87,7 +87,7 @@ function InitButtons()
 			  "Face maker", null );
 	
 	buttonX = 2;
-	buttonY += 16;
+	buttonY += 14;
 	var leftButtonWidth = 5;
 	var rightButtonWidth = ( m_numBlocksWide - ( leftButtonWidth + (buttonX * 3 ) ) );
 	buttonWidth = Math.floor( ( m_numBlocksWide - ( buttonX * 3 ) ) / 2 );
@@ -174,6 +174,21 @@ function InitButtons()
 			  buttonY,
 			  leftButtonWidth,
 			  buttonHeight,
+			  "Stubble", null );
+	
+	AddSlider( m_pMainButtons,
+			  m_numBlocksWide - ( rightButtonWidth + buttonX ),
+			  buttonY,
+			  rightButtonWidth,
+			  buttonHeight,
+			  ChangeBeardStubble );
+	
+	buttonY += 3;
+	AddButton( m_pMainButtons,
+			  buttonX,
+			  buttonY,
+			  leftButtonWidth,
+			  buttonHeight,
 			  "Hair", null );
 	
 	AddSlider( m_pMainButtons,
@@ -248,6 +263,14 @@ function ChangeHair( value )
 		m_hairValue = HairType.LAST - 1;
 	}
 	log( "m_hairValue " + m_hairValue );
+}
+
+var m_minBeardStubble = 6;
+var m_maxBeardStubble = 1;
+var m_currentBeardStubble = 4;
+function ChangeBeardStubble( value )
+{
+	m_currentBeardStubble = Math.floor( ( m_maxBeardStubble - m_minBeardStubble ) * value ) + m_minBeardStubble;
 }
 
 var m_beardValue = 0.5;
@@ -488,6 +511,8 @@ function Draw()
 			{
 				ctx.translate( ( m_numBlocksWide - m_minBlocksWide ) / 2 * m_blockSize, ( m_numBlocksHigh - m_minBlocksHigh ) / 2 * m_blockSize );
 				
+				ctx.translate( 0, -m_blockSize * 2 );
+				
 				if( m_hairValue == HairType.MOHAWK )
 				{
 					DrawHair( ctx, 10, 8.75, 1.7 );
@@ -579,7 +604,7 @@ function Draw()
 function DrawBeard( ctx )
 {
 	
-	ctx.setLineDash([1,4]);
+	ctx.setLineDash([1,m_currentBeardStubble]);
 	
 	if( m_beardValue == BeardType.NONE )
 	{
