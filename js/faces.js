@@ -242,6 +242,7 @@ function RandomizeFace()
 	m_pMainButtons[m_sliderStartIndex+6].SetValue( Random() );
 	m_pMainButtons[m_sliderStartIndex+8].SetValue( Random() );
 	m_pMainButtons[m_sliderStartIndex+10].SetValue( Random() );
+	m_pMainButtons[m_sliderStartIndex+12].SetValue( Random() );
 }
 
 var m_hairValue = 0.5;
