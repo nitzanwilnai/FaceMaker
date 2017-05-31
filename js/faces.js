@@ -246,13 +246,14 @@ function RandomizeFace()
 
 var m_hairValue = 0.5;
 var HairType = {
-	"NONE": 0,
-	"SHORT": 1,
-	"LONG": 2,
-	"LONG2": 3,
-	"LONG3": 4,
-	"MOHAWK": 5,
-	"LAST": 6
+	"NONE":		0,
+	"SHORT":	1,
+	"SHORT2":	2,
+	"LONG":		3,
+	"LONG2":	4,
+	"LONG3":	5,
+	"MOHAWK":	6,
+	"LAST":		7
 };
 function ChangeHair( value )
 {
@@ -534,7 +535,8 @@ function Draw()
 					ctx.translate( m_blockSize * -m_faceFeaturesCurrent, 0 );
 					
 					// hair
-					if( m_hairValue == HairType.SHORT )
+					if( m_hairValue == HairType.SHORT ||
+						m_hairValue == HairType.SHORT2 )
 					{
 						DrawHair( ctx, 10, 8.75, 1.7 );
 					}
@@ -672,6 +674,24 @@ function DrawHair( ctx, x, y, size )
 			
 			ctx.arc( x * m_blockSize, y * m_blockSize, size * m_blockSize, 1*Math.PI, 1.5*Math.PI);
 			ctx.arc( x * m_blockSize, y * m_blockSize - (size * ( m_blockSize * 2 ) ), size * m_blockSize, 0.5*Math.PI, 0.15*Math.PI, true);
+			
+			ctx.stroke();
+			ctx.closePath();
+			
+			ctx.restore();
+		}
+	}
+	if( m_hairValue == HairType.SHORT2 )
+	{
+		for( var i = 0; i < 10; i++ )
+		{
+			x = originalX + m_pHairX[i];
+			y = originalY + m_pHairY[i];;
+			
+			ctx.save();
+			ctx.beginPath();
+			
+			ctx.arc( x * m_blockSize, y * m_blockSize, size * m_blockSize, 1*Math.PI, 1.8*Math.PI);
 			
 			ctx.stroke();
 			ctx.closePath();
