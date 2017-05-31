@@ -37,7 +37,7 @@ function Init()
 	ResizeGame();
 	
 	InitButtons();
-	InitFaceFeatures();
+	RandomizeHairPlacement();
 	
 	m_gameState = GameState.MAIN_MENU;
 	
@@ -205,7 +205,7 @@ function AddSlider( pButtonArray, x, y, w, h, pFunction )
 
 var m_pHairX = [];
 var m_pHairY = [];
-function InitFaceFeatures()
+function RandomizeHairPlacement()
 {
 	var variability = m_blockSize / 50;
 	
@@ -223,6 +223,8 @@ function InitFaceFeatures()
 
 function RandomizeFace()
 {
+	RandomizeHairPlacement();
+	
 	m_pMainButtons[m_sliderStartIndex+0].SetValue( Random() );
 	m_pMainButtons[m_sliderStartIndex+2].SetValue( Random() );
 	m_pMainButtons[m_sliderStartIndex+4].SetValue( Random() );
