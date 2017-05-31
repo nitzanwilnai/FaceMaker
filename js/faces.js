@@ -36,7 +36,6 @@ function Init()
 	
 	ResizeGame();
 	
-	InitButtons();
 	RandomizeHairPlacement();
 	
 	m_gameState = GameState.MAIN_MENU;
@@ -70,6 +69,8 @@ function InitButtons()
 	var buttonX = 1;
 	
 	var buttonIndex = 0;
+	
+	m_pMainButtons.length = 0;
 	
 	AddButton( m_pMainButtons,
 			  1,
@@ -293,8 +294,8 @@ function MorphFace( value )
 	m_faceFeaturesCurrent = ( ( m_faceFeaturesMax - m_faceFeaturesMin ) * value ) + m_faceFeaturesMin;
 }
 
-var m_noseMin = [ 11.75, 10, 0.75, 1 ];
-var m_noseMax = [ 13, 10, 2.5, 1 ];
+var m_noseMin = [11.75, 9.5, 0.75, 0.5];//[ 11.75, 10, 0.75, 1 ];
+var m_noseMax = [13, 10.25, 2.5, 1.25];//[ 13, 10, 2.5, 2 ];
 var m_noseCurrent = [ 12.25, 10, 1.5, 1 ];
 function MorphNose( value )
 {
@@ -347,12 +348,15 @@ function ResizeGame() {
 	var newHeight = window.innerHeight;
 	
 	
-	m_blockSize = Math.floor( newWidth / m_numBlocksWide );
+	m_blockSize = Math.floor( newWidth / m_minBlocksWide );
 	var blocksHigh = Math.floor( newHeight / m_blockSize );
-	if( blocksHigh < m_numBlocksHigh )
+	if( blocksHigh < m_minBlocksHigh )
 	{
-		m_blockSize = Math.floor( newHeight / m_numBlocksHigh );
+		m_blockSize = Math.floor( newHeight / m_minBlocksHigh );
 	}
+	
+	m_numBlocksWide = Math.floor( newWidth / m_blockSize );
+	m_numBlocksHigh = Math.floor( newHeight / m_blockSize );
 	
 	var boardWidth = m_numBlocksWide * m_blockSize;
 	var boardHeight = m_numBlocksHigh * m_blockSize;
@@ -384,6 +388,8 @@ function ResizeGame() {
 	// shouldn't get called the first time?
 	ResizeElements();
 	
+	InitButtons();
+
 	log( "ResizeGame() finished! " + m_canvasWidth + ", " + m_canvasHeight );
 }
 
@@ -478,61 +484,68 @@ function Draw()
 			ctx.fillStyle = m_backgroundColor;
 			ctx.lineWidth = window.devicePixelRatio * 1.0;
 			
-			if( m_hairValue == HairType.MOHAWK )
+			ctx.save();
 			{
-				DrawHair( ctx, 10, 8.75, 1.7 );
-			}
-			
-			// face
-			DrawArcPath( ctx, m_faceCurrent[0], m_faceCurrent[1], m_faceCurrent[2], m_faceCurrent[3], 0, 2, true );
-			
-			ctx.save()
-			{
-				if( m_hairValue == HairType.LONG ||
-				   m_hairValue == HairType.LONG2 ||
-				   m_hairValue == HairType.LONG3 ||
-				   m_hairValue == HairType.NONE )
+				ctx.translate( ( m_numBlocksWide - m_minBlocksWide ) / 2 * m_blockSize, ( m_numBlocksHigh - m_minBlocksHigh ) / 2 * m_blockSize );
+				
+				if( m_hairValue == HairType.MOHAWK )
 				{
 					DrawHair( ctx, 10, 8.75, 1.7 );
 				}
 				
-				ctx.translate( m_blockSize * -m_faceFeaturesCurrent, 0 );
+				// face
+				DrawArcPath( ctx, m_faceCurrent[0], m_faceCurrent[1], m_faceCurrent[2], m_faceCurrent[3], 0, 2, true );
 				
-				// hair
-				if( m_hairValue == HairType.SHORT )
+				ctx.save()
 				{
-					DrawHair( ctx, 10, 8.75, 1.7 );
-				}
-				
-				// ear
-				DrawEar( ctx, m_earCurrent[0], m_earCurrent[1], m_earCurrent[2], m_earCurrent[3] );
-			}
-			ctx.restore();
-			
-			ctx.save()
-			{
-				DrawArcPath( ctx, m_faceCurrent[0], m_faceCurrent[1], m_faceCurrent[2], m_faceCurrent[3], 0, 2, false, 0, true );
-				ctx.translate( m_blockSize * m_faceFeaturesCurrent, 0 );
-				
-				ctx.save();
-				{
-					ctx.clip();
-					DrawBeard( ctx );
+					if( m_hairValue == HairType.LONG ||
+					   m_hairValue == HairType.LONG2 ||
+					   m_hairValue == HairType.LONG3 ||
+					   m_hairValue == HairType.NONE )
+					{
+						DrawHair( ctx, 10, 8.75, 1.7 );
+					}
+					
+					ctx.translate( m_blockSize * -m_faceFeaturesCurrent, 0 );
+					
+					// hair
+					if( m_hairValue == HairType.SHORT )
+					{
+						DrawHair( ctx, 10, 8.75, 1.7 );
+					}
+					
+					// ear
+					DrawEar( ctx, m_earCurrent[0], m_earCurrent[1], m_earCurrent[2], m_earCurrent[3] );
 				}
 				ctx.restore();
 				
-				
-				// right eye
-				DrawEye( ctx, m_eyeCurrent[0], m_eyeCurrent[1], m_eyeCurrent[2], m_eyeCurrent[3] );
-				
-				// nose
-				DrawArcPath( ctx, m_noseCurrent[0], m_noseCurrent[1], m_noseCurrent[2], m_noseCurrent[3], 1.25, 2.75, true ); // medium
-				
-				// left eye
-				DrawEye( ctx, m_eyeCurrent[0] - 0.85, m_eyeCurrent[1], m_eyeCurrent[2], m_eyeCurrent[3] );
-				
-				// smile
-				DrawArcPath( ctx, 12, 11, 2, 1, 2.6, 2.75, false );
+				ctx.save()
+				{
+					DrawArcPath( ctx, m_faceCurrent[0], m_faceCurrent[1], m_faceCurrent[2], m_faceCurrent[3], 0, 2, false, 0, true );
+					ctx.translate( m_blockSize * m_faceFeaturesCurrent, 0 );
+					
+					ctx.save();
+					{
+						ctx.clip();
+						DrawBeard( ctx );
+					}
+					ctx.restore();
+					
+					
+					// right eye
+					DrawEye( ctx, m_eyeCurrent[0], m_eyeCurrent[1], m_eyeCurrent[2], m_eyeCurrent[3] );
+					
+					// nose
+					DrawArcPath( ctx, m_noseCurrent[0], m_noseCurrent[1], m_noseCurrent[2], m_noseCurrent[3], 1.25, 2.75, true ); // medium
+					
+					// left eye
+					DrawEye( ctx, m_eyeCurrent[0] - 0.85, m_eyeCurrent[1], m_eyeCurrent[2], m_eyeCurrent[3] );
+					
+					// smile
+					DrawArcPath( ctx, 12, 11, 2, 1, 2.6, 2.75, false );
+					
+				}
+				ctx.restore();
 				
 			}
 			ctx.restore();

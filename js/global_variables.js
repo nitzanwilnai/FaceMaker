@@ -15,6 +15,8 @@ var m_greenColor = "#80bc41";
 var m_darkBlue = "#244892";
 var m_lightBlue = "#12a8d8";
 
+var m_minBlocksWide = 21;
+var m_minBlocksHigh = 37;
 var m_numBlocksWide = 21;
 var m_numBlocksHigh = 37;
 var m_blockSize;
